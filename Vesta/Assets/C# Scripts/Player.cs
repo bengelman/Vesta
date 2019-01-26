@@ -64,7 +64,7 @@ public class Player : MonoBehaviour
             GetComponent<SpriteAnim>().PlayTemp(2, 1);
             DealDamage(50);
         } else if (Input.GetKeyDown(isPlayer1 ? KeyCode.E : KeyCode.Slash)) {
-
+            GetComponent<SpriteAnim>().PlayTemp(3, 1);
             DealDamage(200);
         }
 
