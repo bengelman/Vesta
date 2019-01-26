@@ -61,8 +61,10 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(isPlayer1 ? KeyCode.Q : KeyCode.Period))
         {
+            GetComponent<SpriteAnim>().PlayTemp(2, 1);
             DealDamage(50);
         } else if (Input.GetKeyDown(isPlayer1 ? KeyCode.E : KeyCode.Slash)) {
+
             DealDamage(200);
         }
 

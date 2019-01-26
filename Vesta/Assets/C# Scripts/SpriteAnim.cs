@@ -37,7 +37,7 @@ public class SpriteAnim : MonoBehaviour
 	}
 	public void PlayAnimation (int ID)
 	{
-		if (playing == ID)
+		if (playing == ID || loops > 0)
         {
             return;
         }
