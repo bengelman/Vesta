@@ -9,11 +9,12 @@ public class Player : MonoBehaviour
     private Vector2 affectedVelocity = new Vector2(0, 0);
     public float jumpSpeed = 5;
     public float speed = 10;
+    public float HP;
+    public int resources;
     private bool canJump;
     private bool hasJumped;
     public bool isPlayer1;
-    public int resources;
-    public float HP;
+    public bool isFrozen;
 
     // Start is called before the first frame update
     void Start()
@@ -22,7 +23,7 @@ public class Player : MonoBehaviour
         canJump = true;
         hasJumped = false;
         HP = 1000;
-        //isPlayer1 = true;
+        isFrozen = false;
     }
 
     // Update is called once per frame
@@ -34,6 +35,8 @@ public class Player : MonoBehaviour
         } else {
             canJump = true;
         }
+
+        if (isFrozen) return;
 
         if (Input.GetKey(isPlayer1 ? KeyCode.A : KeyCode.LeftArrow))
         {
@@ -65,6 +68,7 @@ public class Player : MonoBehaviour
             DealDamage(50);
         } else if (Input.GetKeyDown(isPlayer1 ? KeyCode.E : KeyCode.Slash)) {
             GetComponent<SpriteAnim>().PlayTemp(3, 1);
+            isFrozen = true;
             Invoke("SpecialDamage", 1f/2f);
         }
 
@@ -127,6 +131,7 @@ public class Player : MonoBehaviour
     private void SpecialDamage()
     {
         DealDamage(200);
+        isFrozen = false;
     }
 
     public void DealDamage(float damage)
@@ -144,6 +149,7 @@ public class Player : MonoBehaviour
     {
         gameObject.SetActive(true);
         transform.position = new Vector2(13, 10);
+        isFrozen = false;
     }
 
 }
