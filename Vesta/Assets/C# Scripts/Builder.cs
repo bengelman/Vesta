@@ -9,6 +9,7 @@ public class Builder : MonoBehaviour
     public ResourceManager resourceManager;
     public GameObject block, anvil;
     private Structure[] structures;
+    public SpriteRenderer render;
     public int selected;
     // Start is called before the first frame update
     void Start()
@@ -26,9 +27,11 @@ public class Builder : MonoBehaviour
         if (Input.GetKeyDown(player.isPlayer1 ? KeyCode.LeftAlt : KeyCode.RightAlt))
         {
             selected++;
+            
         }
         selected %= structures.Length;
-        if(Input.GetKeyDown(player.isPlayer1 ? KeyCode.LeftShift : KeyCode.RightShift))
+        render.sprite = structures[selected].node.GetComponent<SpriteRenderer>().sprite;
+        if (Input.GetKeyDown(player.isPlayer1 ? KeyCode.LeftShift : KeyCode.RightShift))
         {
             if (!resourceManager.AreTilesOccupied(structures[selected].BuildPattern(GetComponent<SpriteRenderer>().flipX, (int)player.transform.position.x, (int)player.transform.position.y)))
             {
@@ -73,11 +76,12 @@ public class Builder : MonoBehaviour
         }
         public override Vector2[] BuildPattern(bool facing, int playerX, int playerY)
         {
-            return new Vector2[] { new Vector2(playerX, playerY - 1) };
+            return new Vector2[] { new Vector2(Mathf.RoundToInt(playerX), playerY - 1) };
         }
         public override void Build(GameObject player, bool facing, int playerX, int playerY)
         {
-            Instantiate(node, new Vector2(playerX, playerY - 1), new Quaternion());
+            player.GetComponent<Player>().KnockBack(new Vector2(0, 7));
+            Instantiate(node, new Vector2(Mathf.RoundToInt(playerX), playerY - 1), new Quaternion());
             
         }
     }

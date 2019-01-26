@@ -156,7 +156,12 @@ public class Player : MonoBehaviour
         RaycastHit2D attack = Physics2D.Raycast((Vector2)transform.position + (direction ? Vector2.left * 1f / 2f : Vector2.right), direction ? Vector2.left : Vector2.right, 1f / 2f);
 
         if (attack.collider != null) {
-            attack.collider.GetComponent<Player>().TakeDamge(damage, direction ? "left" : "right");
+            if (attack.collider.GetComponent<Player>() != null)
+                attack.collider.GetComponent<Player>().TakeDamge(damage, direction ? "left" : "right");
+            if (attack.collider.GetComponent<Breakable>() != null)
+            {
+                attack.collider.GetComponent<Breakable>().Break();
+            }
         }
     }
 
