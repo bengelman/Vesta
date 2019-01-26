@@ -21,7 +21,7 @@ public class Player : MonoBehaviour
         rb2d = GetComponent<Rigidbody2D>();
         canJump = true;
         hasJumped = false;
-        HP = 100;
+        HP = 1000;
         //isPlayer1 = true;
     }
 
@@ -61,9 +61,9 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(isPlayer1 ? KeyCode.Q : KeyCode.Period))
         {
-            DealDamage(10);
-        } else if (Input.GetKeyDown(isPlayer1 ? KeyCode.E : KeyCode.Backslash)) {
             DealDamage(50);
+        } else if (Input.GetKeyDown(isPlayer1 ? KeyCode.E : KeyCode.Backslash)) {
+            DealDamage(200);
         }
 
         /**** For damage testing
@@ -120,7 +120,7 @@ public class Player : MonoBehaviour
     {
         bool direction = GetComponent<SpriteRenderer>().flipX; // true == left, false == right
 
-        RaycastHit2D attack = Physics2D.Raycast((Vector2)transform.position + (direction ? Vector2.left : Vector2.right), direction ? Vector2.left : Vector2.right, 2);
+        RaycastHit2D attack = Physics2D.Raycast((Vector2)transform.position + (direction ? Vector2.left * 1f/2f : Vector2.right), direction ? Vector2.left : Vector2.right, 1f/2f);
 
         if (attack.collider != null) {
             attack.collider.GetComponent<Player>().TakeDamge(damage, direction ? "left" : "right");
