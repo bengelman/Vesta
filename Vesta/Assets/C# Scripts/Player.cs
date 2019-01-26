@@ -115,9 +115,9 @@ public class Player : MonoBehaviour
         HP -= damage;
 
         if (dmgDir == "left") {
-            affectedVelocity = new Vector2(-4, 1) * Mathf.Log(damage);
+            affectedVelocity = new Vector2(-4, 1) * Mathf.Log(damage * (1000 - HP) / 100);
         } else {
-            affectedVelocity = new Vector2(4, 1) * Mathf.Log(damage);
+            affectedVelocity = new Vector2(4, 1) * Mathf.Log(damage * (1000 - HP) / 100);
         }
 
         if (HP <= 0)
