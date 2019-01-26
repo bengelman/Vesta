@@ -31,8 +31,12 @@ public class ResourceManager : MonoBehaviour
     {
         foreach (Vector2 vec in occupiedTiles)
         {
+            if (vec.y < 1) return true;
+            if (vec.y >= mapY) return true;
+            if (vec.x < 1) return true;
+            if (vec.x >= mapX) return true;
             if (tiles[(int)vec.x,(int)vec.y])
-                return false;
+                return true;
         }
         return false;
     }
