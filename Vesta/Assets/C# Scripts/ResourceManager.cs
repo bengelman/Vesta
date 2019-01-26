@@ -15,7 +15,7 @@ public class ResourceManager : MonoBehaviour
     {
         foreach(Vector2 vec in occupiedTiles)
         {
-
+            tiles[(int)vec.x][(int)vec.y] = true;
         }
     }
 
@@ -24,12 +24,20 @@ public class ResourceManager : MonoBehaviour
     {
         
     }
-    void AreTilesOccupied(Vector2[] tiles)
+    public bool AreTilesOccupied(Vector2[] checkTiles)
     {
-
+        foreach (Vector2 vec in occupiedTiles)
+        {
+            if (tiles[(int)vec.x][(int)vec.y])
+                return false;
+        }
+        return false;
     }
-    void SetTilesOccupied(Vector2[] tiles)
+    public void SetTiles(Vector2[] checkTiles, bool value)
     {
-
+        foreach (Vector2 vec in checkTiles)
+        {
+            tiles[(int)vec.x][(int)vec.y] = value;
+        }
     }
 }

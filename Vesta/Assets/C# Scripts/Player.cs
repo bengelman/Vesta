@@ -22,6 +22,7 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         float moveHorizontal = Input.GetAxis("Horizontal");
 
         if (hasJumped) {
@@ -30,13 +31,16 @@ public class Player : MonoBehaviour
             canJump = true;
         }
 
-        if (Input.GetKeyDown("Jump") && canJump) {
+        if (Input.GetKeyDown("space") && canJump) {
+            rb2d.velocity = new Vector2(0, 0);
+            Debug.Log("Jump");
             velocity = new Vector2(velocity.x, jumpSpeed);
             hasJumped = true;
         }
 
-        velocity = new Vector2(moveHorizontal * speed, velocity.y);
-        rb2d.AddForce(velocity);
+        velocity = new Vector2(moveHorizontal * speed, Mathf.Min(rb2d.velocity.y + velocity.y, jumpSpeed));
+        rb2d.velocity = velocity;
+        velocity.y = 0;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
