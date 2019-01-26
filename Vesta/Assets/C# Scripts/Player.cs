@@ -6,7 +6,6 @@ public class Player : MonoBehaviour
 {
     public Rigidbody2D rb2d;
     private Vector2 velocity = new Vector2(0, 0);
-    private Vector2 affectedVelocity = new Vector2(0, 0);
     public float jumpSpeed = 5;
     public float speed = 10;
     public const float maxHP = 1000;
@@ -16,7 +15,7 @@ public class Player : MonoBehaviour
     private bool hasJumped;
     public bool isPlayer1;
     public bool isFrozen;
-    public bool onGround;
+    public bool knockedBack;
 
     // Start is called before the first frame update
     void Start()
@@ -26,7 +25,7 @@ public class Player : MonoBehaviour
         hasJumped = false;
         HP = maxHP;
         isFrozen = false;
-        onGround = true;
+        knockedBack = false;
     }
 
     // Update is called once per frame
@@ -90,11 +89,11 @@ public class Player : MonoBehaviour
         */
 
         velocity = new Vector2(moveHorizontal * speed, rb2d.velocity.y + velocity.y); // movement
-        if (Mathf.Abs(rb2d.velocity.x) > Mathf.Abs(velocity.x) && !onGround) velocity.x = rb2d.velocity.x;
+        if (Mathf.Abs(rb2d.velocity.x) > Mathf.Abs(velocity.x) && knockedBack) velocity.x = rb2d.velocity.x;
         rb2d.velocity = velocity;
-        velocity.y = 0; // don't ask, don't change
+        velocity.y = 0; // don't change
 
-        if (transform.position.y <= 0) { // offstage damage
+        if (transform.position.y <= 0 || transform.position.x < -1 || transform.position.x > 30) { // offstage damage
             TakeDamge(maxHP, GetComponent<SpriteRenderer>().flipX ? "left" : "right");
         }
     }
@@ -102,18 +101,17 @@ public class Player : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         hasJumped = false;
-        onGround = true;
+        knockedBack = false;
     }
 
     private void OnCollisionStay(Collision collision)
     {
-        onGround = true;
+        knockedBack = false;
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
         hasJumped = false;
-        onGround = false;
     }
 
     public void TakeDamge(float damage, string dmgDir)
@@ -122,14 +120,11 @@ public class Player : MonoBehaviour
         isFrozen = true;
         Invoke("Unfreeze", 0.25f);
         Vector2 force = new Vector2(0, Mathf.Sqrt(damage * (maxHP - HP) / 100));
-        //rb2d.velocity = new Vector2(rb2d.velocity.x, Mathf.Sqrt(damage * (maxHP - HP) / 100));
 
         if (dmgDir == "left") {
             force += new Vector2(-(damage * (maxHP - HP) / 100), 0);
-            //rb2d.AddForce(new Vector2(-(damage * (maxHP - HP) / 100), 0));
         } else {
             force += new Vector2((damage * (maxHP - HP) / 100), 0);
-            //rb2d.AddForce(new Vector2(damage * (maxHP - HP) / 100, 0));
         }
 
         if (HP <= 0)
@@ -164,14 +159,16 @@ public class Player : MonoBehaviour
     {
         rb2d.AddForce(new Vector2(strength.x, 0));
         rb2d.velocity = new Vector2(rb2d.velocity.x, strength.y);
+        knockedBack = true;
     }
 
     public void Respawn()
     {
         gameObject.SetActive(true);
+        canJump = true;
+        hasJumped = false;
         velocity = new Vector2(0, 0);
-        affectedVelocity = new Vector2(0, 0);
-        transform.position = new Vector2(13, 10);
+        transform.position = isPlayer1 ? new Vector2(2, 10) : new Vector2(25, 10);
         isFrozen = false;
     }
 
