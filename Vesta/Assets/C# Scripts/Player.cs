@@ -6,10 +6,12 @@ public class Player : MonoBehaviour
 {
     public Rigidbody2D rb2d;
     private Vector2 velocity = new Vector2(0, 0);
+    private Vector2 affectedVelocity = new Vector2(0, 0);
     public float jumpSpeed = 5;
     public float speed = 10;
     private bool canJump;
     private bool hasJumped;
+    public bool isPlayer1;
     public float HP;
 
     // Start is called before the first frame update
@@ -18,7 +20,7 @@ public class Player : MonoBehaviour
         rb2d = GetComponent<Rigidbody2D>();
         canJump = true;
         hasJumped = false;
-        HP = 10;
+        HP = 100;
     }
 
     // Update is called once per frame
@@ -33,7 +35,7 @@ public class Player : MonoBehaviour
             canJump = true;
         }
 
-        if (Input.GetKeyDown("space") && canJump) {
+        if (Input.GetKeyDown(KeyCode.W) && canJump) {
             rb2d.velocity = new Vector2(0, 0);
             velocity = new Vector2(velocity.x, jumpSpeed);
             hasJumped = true;
@@ -47,9 +49,21 @@ public class Player : MonoBehaviour
         {
             GetComponent<SpriteAnim>().PlayAnimation(0);
         }
+
+        /**** For damage testing
+        if (Input.GetKeyDown(KeyCode.J)) {
+            TakeDamge(10, "left");
+        }
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            TakeDamge(10, "right");
+        }
+        */
+
         velocity = new Vector2(moveHorizontal * speed, Mathf.Min(rb2d.velocity.y + velocity.y, jumpSpeed));
-        rb2d.velocity = velocity;
+        rb2d.velocity = velocity + affectedVelocity;
         velocity.y = 0;
+        affectedVelocity /= 2;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -62,9 +76,15 @@ public class Player : MonoBehaviour
         hasJumped = false;
     }
 
-    public void TakeDamge(float damage)
+    public void TakeDamge(float damage, string dmgDir)
     {
         HP -= damage;
+
+        if (dmgDir == "left") {
+            affectedVelocity = new Vector2(-4, 1) * Mathf.Log(damage);
+        } else {
+            affectedVelocity = new Vector2(4, 1) * Mathf.Log(damage);
+        }
 
         if (HP <= 0)
         {
