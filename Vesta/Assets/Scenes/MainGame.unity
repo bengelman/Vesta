@@ -359,6 +359,11 @@ MonoBehaviour:
     - {fileID: 21300000, guid: a6721e948f3217f4d9102f4d81fa4994, type: 3}
     - {fileID: 21300000, guid: bfa359f2635eef646a24a5b3a1aa6a57, type: 3}
     speed: 0.02
+  - AnimationName: Melee
+    Anim_Sprites:
+    - {fileID: 21300000, guid: 7725868ac76034f49a48ee2d331dde3b, type: 3}
+    - {fileID: 21300000, guid: 7725868ac76034f49a48ee2d331dde3b, type: 3}
+    speed: 0.02
   loops: 0
   prevID: 0
 --- !u!212 &544416700

@@ -8,6 +8,10 @@ public class Builder : MonoBehaviour
     private Player player;
     public ResourceManager resourceManager;
     public GameObject block;
+    private Structure[] structures = new Structure[]
+    {
+        new Block()
+    };
     // Start is called before the first frame update
     void Start()
     {
@@ -27,5 +31,13 @@ public class Builder : MonoBehaviour
                 Instantiate(block, new Vector2(placeX, placeY), new Quaternion());
             }
         }
+    }
+    private class Structure
+    {
+
+    }
+    private class Block : Structure
+    {
+
     }
 }
