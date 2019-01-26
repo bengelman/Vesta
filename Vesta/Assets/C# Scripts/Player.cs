@@ -22,24 +22,26 @@ public class Player : MonoBehaviour
         canJump = true;
         hasJumped = false;
         HP = 100;
-        isPlayer1 = true;
+        //isPlayer1 = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
         float moveHorizontal = 0;
-        if(Input.GetKey(isPlayer1 ? KeyCode.A : KeyCode.LeftArrow)) {
-            moveHorizontal = -1;
-        } else if (Input.GetKey(isPlayer1 ? KeyCode.D : KeyCode.RightArrow)) {
-            moveHorizontal = 1;
-        }
-
         if (hasJumped) {
             canJump = false;
         } else {
             canJump = true;
+        }
+
+        if (Input.GetKey(isPlayer1 ? KeyCode.A : KeyCode.LeftArrow))
+        {
+            moveHorizontal = -1;
+        }
+        else if (Input.GetKey(isPlayer1 ? KeyCode.D : KeyCode.RightArrow))
+        {
+            moveHorizontal = 1;
         }
 
         if (Input.GetKeyDown(isPlayer1 ? KeyCode.W : KeyCode.UpArrow) && canJump) {
@@ -57,6 +59,13 @@ public class Player : MonoBehaviour
             GetComponent<SpriteAnim>().PlayAnimation(0);
         }
 
+        if (Input.GetKeyDown(isPlayer1 ? KeyCode.Q : KeyCode.Period))
+        {
+            DealDamage(10);
+        } else if (Input.GetKeyDown(isPlayer1 ? KeyCode.E : KeyCode.Backslash)) {
+            DealDamage(50);
+        }
+
         /**** For damage testing
         if (Input.GetKeyDown(KeyCode.J)) {
             TakeDamge(10, "left");
@@ -66,8 +75,8 @@ public class Player : MonoBehaviour
             TakeDamge(10, "right");
         }
         */
-        
-        if(moveHorizontal < 0)
+
+        if (moveHorizontal < 0)
         {
             GetComponent<SpriteRenderer>().flipX = true;
         }
@@ -104,6 +113,17 @@ public class Player : MonoBehaviour
         if (HP <= 0)
         {
 
+        }
+    }
+
+    public void DealDamage(float damage)
+    {
+        bool direction = GetComponent<SpriteRenderer>().flipX; // true == left, false == right
+
+        RaycastHit2D attack = Physics2D.Raycast((Vector2)transform.position + (direction ? Vector2.left : Vector2.right), direction ? Vector2.left : Vector2.right, 2);
+
+        if (attack.collider != null) {
+            attack.collider.GetComponent<Player>().TakeDamge(damage, direction ? "left" : "right");
         }
     }
 
