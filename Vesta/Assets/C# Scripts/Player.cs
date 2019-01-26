@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
     private Vector2 affectedVelocity = new Vector2(0, 0);
     public float jumpSpeed = 5;
     public float speed = 10;
+    public const float maxHP = 1000;
     public float HP;
     public int resources;
     private bool canJump;
@@ -22,7 +23,7 @@ public class Player : MonoBehaviour
         rb2d = GetComponent<Rigidbody2D>();
         canJump = true;
         hasJumped = false;
-        HP = 1000;
+        HP = maxHP;
         isFrozen = false;
     }
 
@@ -91,7 +92,7 @@ public class Player : MonoBehaviour
             GetComponent<SpriteRenderer>().flipX = false;
         }
         velocity = new Vector2(moveHorizontal * speed, Mathf.Min(rb2d.velocity.y + velocity.y, jumpSpeed));
-        rb2d.velocity = velocity + affectedVelocity;
+        rb2d.velocity = velocity + new Vector2 (affectedVelocity.x * 4, affectedVelocity.y / 2);
         velocity.y = 0;
         affectedVelocity /= 2;
 
@@ -115,16 +116,16 @@ public class Player : MonoBehaviour
         HP -= damage;
 
         if (dmgDir == "left") {
-            affectedVelocity = new Vector2(-4, 1) * Mathf.Log(damage * (1000 - HP) / 100);
+            affectedVelocity = new Vector2(-1, 1) * Mathf.Log(damage * (1000 - HP) / 100);
         } else {
-            affectedVelocity = new Vector2(4, 1) * Mathf.Log(damage * (1000 - HP) / 100);
+            affectedVelocity = new Vector2(1, 1) * Mathf.Log(damage * (maxHP - HP) / 100);
         }
 
         if (HP <= 0)
         {
             gameObject.SetActive(false);
             Invoke("Respawn", 5);
-            HP = 1000;
+            HP = maxHP;
         }
     }
 
