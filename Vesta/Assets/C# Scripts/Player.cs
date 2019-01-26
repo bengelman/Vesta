@@ -121,14 +121,15 @@ public class Player : MonoBehaviour
         HP -= damage;
         isFrozen = true;
         Invoke("Unfreeze", 0.25f);
-        rb2d.velocity = new Vector2(rb2d.velocity.x, Mathf.Sqrt(damage * (maxHP - HP) / 100));
+        Vector2 force = new Vector2(0, Mathf.Sqrt(damage * (maxHP - HP) / 100));
+        //rb2d.velocity = new Vector2(rb2d.velocity.x, Mathf.Sqrt(damage * (maxHP - HP) / 100));
 
         if (dmgDir == "left") {
-            //affectedVelocity = new Vector2(-1, 1) * Mathf.Sqrt(damage * (maxHP - HP) / 100);
-            rb2d.AddForce(new Vector2(-(damage * (maxHP - HP) / 100), 0));
+            force += new Vector2(-(damage * (maxHP - HP) / 100), 0);
+            //rb2d.AddForce(new Vector2(-(damage * (maxHP - HP) / 100), 0));
         } else {
-            //affectedVelocity = new Vector2(1, 1) * Mathf.Sqrt(damage * (maxHP - HP) / 100);
-            rb2d.AddForce(new Vector2(damage * (maxHP - HP) / 100, 0));
+            force += new Vector2((damage * (maxHP - HP) / 100), 0);
+            //rb2d.AddForce(new Vector2(damage * (maxHP - HP) / 100, 0));
         }
 
         if (HP <= 0)
@@ -137,6 +138,8 @@ public class Player : MonoBehaviour
             Invoke("Respawn", 3);
             HP = maxHP;
         }
+
+        KnockBack(force);
     }
 
     private void SpecialDamage()
@@ -155,6 +158,12 @@ public class Player : MonoBehaviour
         if (attack.collider != null) {
             attack.collider.GetComponent<Player>().TakeDamge(damage, direction ? "left" : "right");
         }
+    }
+
+    public void KnockBack(Vector2 strength)
+    {
+        rb2d.AddForce(new Vector2(strength.x, 0));
+        rb2d.velocity = new Vector2(rb2d.velocity.x, strength.y);
     }
 
     public void Respawn()
