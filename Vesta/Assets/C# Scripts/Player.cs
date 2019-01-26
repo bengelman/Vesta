@@ -9,12 +9,14 @@ public class Player : MonoBehaviour
     private Vector2 affectedVelocity = new Vector2(0, 0);
     public float jumpSpeed = 5;
     public float speed = 10;
+    public const float maxHP = 1000;
     public float HP;
     public int resources;
     private bool canJump;
     private bool hasJumped;
     public bool isPlayer1;
     public bool isFrozen;
+    public bool onGround;
 
     // Start is called before the first frame update
     void Start()
@@ -22,47 +24,52 @@ public class Player : MonoBehaviour
         rb2d = GetComponent<Rigidbody2D>();
         canJump = true;
         hasJumped = false;
-        HP = 1000;
+        HP = maxHP;
         isFrozen = false;
+        onGround = true;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (isFrozen) return;
+
         float moveHorizontal = 0;
         if (hasJumped) {
             canJump = false;
         } else {
             canJump = true;
         }
-
-        if (isFrozen) return;
-
-        if (Input.GetKey(isPlayer1 ? KeyCode.A : KeyCode.LeftArrow))
+        
+        if (Input.GetKey(isPlayer1 ? KeyCode.A : KeyCode.LeftArrow)) // movement
         {
             moveHorizontal = -1;
         }
-        else if (Input.GetKey(isPlayer1 ? KeyCode.D : KeyCode.RightArrow))
-        {
+        else if (Input.GetKey(isPlayer1 ? KeyCode.D : KeyCode.RightArrow)) {
             moveHorizontal = 1;
         }
-
-        if (Input.GetKeyDown(isPlayer1 ? KeyCode.W : KeyCode.UpArrow) && canJump) {
+        if (Input.GetKeyDown(isPlayer1 ? KeyCode.W : KeyCode.UpArrow) && canJump) { // jump
             rb2d.velocity = new Vector2(0, 0);
             velocity = new Vector2(velocity.x, jumpSpeed);
             hasJumped = true;
         }
-        if (moveHorizontal != 0 && !hasJumped)
-        {
+
+        if (moveHorizontal != 0 && !hasJumped) { // animations
             Debug.Log("Walk");
             GetComponent<SpriteAnim>().PlayAnimation(1);
-        }
-        else
-        {
+        } else {
             GetComponent<SpriteAnim>().PlayAnimation(0);
         }
+        if (moveHorizontal < 0) // direction animation
+        {
+            GetComponent<SpriteRenderer>().flipX = true;
+        }
+        else if (moveHorizontal > 0)
+        {
+            GetComponent<SpriteRenderer>().flipX = false;
+        }
 
-        if (Input.GetKeyDown(isPlayer1 ? KeyCode.Q : KeyCode.Period))
+        if (Input.GetKeyDown(isPlayer1 ? KeyCode.Q : KeyCode.Period)) // attacks
         {
             GetComponent<SpriteAnim>().PlayTemp(2, 1);
             DealDamage(50);
@@ -82,50 +89,57 @@ public class Player : MonoBehaviour
         }
         */
 
-        if (moveHorizontal < 0)
-        {
-            GetComponent<SpriteRenderer>().flipX = true;
-        }
-        else if (moveHorizontal > 0)
-        {
-            GetComponent<SpriteRenderer>().flipX = false;
-        }
-        velocity = new Vector2(moveHorizontal * speed, Mathf.Min(rb2d.velocity.y + velocity.y, jumpSpeed));
-        rb2d.velocity = velocity + affectedVelocity;
-        velocity.y = 0;
-        affectedVelocity /= 2;
+        velocity = new Vector2(moveHorizontal * speed, rb2d.velocity.y + velocity.y); // movement
+        if (Mathf.Abs(rb2d.velocity.x) > Mathf.Abs(velocity.x) && !onGround) velocity.x = rb2d.velocity.x;
+        rb2d.velocity = velocity;
+        velocity.y = 0; // don't ask, don't change
 
-        if (transform.position.y <= 0) {
-            TakeDamge(500 * Time.deltaTime, GetComponent<SpriteRenderer>().flipX ? "left" : "right");
+        if (transform.position.y <= 0) { // offstage damage
+            TakeDamge(maxHP, GetComponent<SpriteRenderer>().flipX ? "left" : "right");
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         hasJumped = false;
+        onGround = true;
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        onGround = true;
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
         hasJumped = false;
+        onGround = false;
     }
 
     public void TakeDamge(float damage, string dmgDir)
     {
         HP -= damage;
+        isFrozen = true;
+        Invoke("Unfreeze", 0.25f);
+        Vector2 force = new Vector2(0, Mathf.Sqrt(damage * (maxHP - HP) / 100));
+        //rb2d.velocity = new Vector2(rb2d.velocity.x, Mathf.Sqrt(damage * (maxHP - HP) / 100));
 
         if (dmgDir == "left") {
-            affectedVelocity = new Vector2(-4, 1) * Mathf.Log(damage * (1000 - HP) / 100);
+            force += new Vector2(-(damage * (maxHP - HP) / 100), 0);
+            //rb2d.AddForce(new Vector2(-(damage * (maxHP - HP) / 100), 0));
         } else {
-            affectedVelocity = new Vector2(4, 1) * Mathf.Log(damage * (1000 - HP) / 100);
+            force += new Vector2((damage * (maxHP - HP) / 100), 0);
+            //rb2d.AddForce(new Vector2(damage * (maxHP - HP) / 100, 0));
         }
 
         if (HP <= 0)
         {
             gameObject.SetActive(false);
-            Invoke("Respawn", 5);
-            HP = 1000;
+            Invoke("Respawn", 3);
+            HP = maxHP;
         }
+
+        KnockBack(force);
     }
 
     private void SpecialDamage()
@@ -146,10 +160,23 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void KnockBack(Vector2 strength)
+    {
+        rb2d.AddForce(new Vector2(strength.x, 0));
+        rb2d.velocity = new Vector2(rb2d.velocity.x, strength.y);
+    }
+
     public void Respawn()
     {
         gameObject.SetActive(true);
+        velocity = new Vector2(0, 0);
+        affectedVelocity = new Vector2(0, 0);
         transform.position = new Vector2(13, 10);
+        isFrozen = false;
+    }
+
+    private void Unfreeze()
+    {
         isFrozen = false;
     }
 
