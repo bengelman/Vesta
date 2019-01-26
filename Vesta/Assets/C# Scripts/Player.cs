@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     public float speed = 10;
     private bool canJump;
     private bool hasJumped;
+    public float HP;
 
     // Start is called before the first frame update
     void Start()
@@ -17,6 +18,7 @@ public class Player : MonoBehaviour
         rb2d = GetComponent<Rigidbody2D>();
         canJump = true;
         hasJumped = false;
+        HP = 10;
     }
 
     // Update is called once per frame
@@ -51,6 +53,16 @@ public class Player : MonoBehaviour
     private void OnCollisionExit2D(Collision2D collision)
     {
         hasJumped = false;
+    }
+
+    public void TakeDamge(float damage)
+    {
+        HP -= damage;
+
+        if (HP <= 0)
+        {
+
+        }
     }
 
 }
