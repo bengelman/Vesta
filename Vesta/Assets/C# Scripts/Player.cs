@@ -65,7 +65,7 @@ public class Player : MonoBehaviour
             DealDamage(50);
         } else if (Input.GetKeyDown(isPlayer1 ? KeyCode.E : KeyCode.Slash)) {
             GetComponent<SpriteAnim>().PlayTemp(3, 1);
-            DealDamage(200);
+            Invoke("SpecialDamage", 1f/2f);
         }
 
         /**** For damage testing
@@ -122,6 +122,11 @@ public class Player : MonoBehaviour
             Invoke("Respawn", 5);
             HP = 1000;
         }
+    }
+
+    private void SpecialDamage()
+    {
+        DealDamage(200);
     }
 
     public void DealDamage(float damage)
