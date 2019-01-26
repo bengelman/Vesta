@@ -347,6 +347,18 @@ MonoBehaviour:
     - {fileID: 21300000, guid: 7d3ca853b7698b346a4f7f3261ea28f5, type: 3}
     - {fileID: 21300000, guid: 463b5f914e09b15459b9249d9925e0ea, type: 3}
     speed: 0.1
+  - AnimationName: Melee
+    Anim_Sprites:
+    - {fileID: 21300000, guid: 45d0d3884f99e364c8f5f3705753bcc0, type: 3}
+    - {fileID: 21300000, guid: 653f0351216afa74394c40023b3347e0, type: 3}
+    - {fileID: 21300000, guid: 3d37d3b199d07024b899b1598c552fc8, type: 3}
+    speed: 0.02
+  - AnimationName: Melee
+    Anim_Sprites:
+    - {fileID: 21300000, guid: 7725868ac76034f49a48ee2d331dde3b, type: 3}
+    - {fileID: 21300000, guid: a6721e948f3217f4d9102f4d81fa4994, type: 3}
+    - {fileID: 21300000, guid: bfa359f2635eef646a24a5b3a1aa6a57, type: 3}
+    speed: 0.02
   loops: 0
   prevID: 0
 --- !u!212 &544416700
@@ -1353,6 +1365,18 @@ MonoBehaviour:
     - {fileID: 21300000, guid: 7d3ca853b7698b346a4f7f3261ea28f5, type: 3}
     - {fileID: 21300000, guid: 463b5f914e09b15459b9249d9925e0ea, type: 3}
     speed: 0.1
+  - AnimationName: Moving
+    Anim_Sprites:
+    - {fileID: 21300000, guid: 45d0d3884f99e364c8f5f3705753bcc0, type: 3}
+    - {fileID: 21300000, guid: 653f0351216afa74394c40023b3347e0, type: 3}
+    - {fileID: 21300000, guid: 3d37d3b199d07024b899b1598c552fc8, type: 3}
+    speed: 0.02
+  - AnimationName: Moving
+    Anim_Sprites:
+    - {fileID: 21300000, guid: 7725868ac76034f49a48ee2d331dde3b, type: 3}
+    - {fileID: 21300000, guid: a6721e948f3217f4d9102f4d81fa4994, type: 3}
+    - {fileID: 21300000, guid: bfa359f2635eef646a24a5b3a1aa6a57, type: 3}
+    speed: 0.02
   loops: 0
   prevID: 0
 --- !u!212 &2089783305
