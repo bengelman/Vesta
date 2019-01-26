@@ -62,7 +62,7 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(isPlayer1 ? KeyCode.Q : KeyCode.Period))
         {
             DealDamage(50);
-        } else if (Input.GetKeyDown(isPlayer1 ? KeyCode.E : KeyCode.Backslash)) {
+        } else if (Input.GetKeyDown(isPlayer1 ? KeyCode.E : KeyCode.Slash)) {
             DealDamage(200);
         }
 
