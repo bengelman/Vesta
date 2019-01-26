@@ -88,6 +88,10 @@ public class Player : MonoBehaviour
         rb2d.velocity = velocity + affectedVelocity;
         velocity.y = 0;
         affectedVelocity /= 2;
+
+        if (transform.position.y <= 0) {
+            TakeDamge(500 * Time.deltaTime, GetComponent<SpriteRenderer>().flipX ? "left" : "right");
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -112,7 +116,9 @@ public class Player : MonoBehaviour
 
         if (HP <= 0)
         {
-
+            gameObject.SetActive(false);
+            Invoke("Respawn", 5);
+            HP = 1000;
         }
     }
 
@@ -120,11 +126,17 @@ public class Player : MonoBehaviour
     {
         bool direction = GetComponent<SpriteRenderer>().flipX; // true == left, false == right
 
-        RaycastHit2D attack = Physics2D.Raycast((Vector2)transform.position + (direction ? Vector2.left * 1f/2f : Vector2.right), direction ? Vector2.left : Vector2.right, 1f/2f);
+        RaycastHit2D attack = Physics2D.Raycast((Vector2)transform.position + (direction ? Vector2.left * 1f / 2f : Vector2.right), direction ? Vector2.left : Vector2.right, 1f / 2f);
 
         if (attack.collider != null) {
             attack.collider.GetComponent<Player>().TakeDamge(damage, direction ? "left" : "right");
         }
+    }
+
+    public void Respawn()
+    {
+        gameObject.SetActive(true);
+        transform.position = new Vector2(13, 10);
     }
 
 }
