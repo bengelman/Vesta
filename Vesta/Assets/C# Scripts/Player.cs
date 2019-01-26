@@ -33,11 +33,18 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown("space") && canJump) {
             rb2d.velocity = new Vector2(0, 0);
-            Debug.Log("Jump");
             velocity = new Vector2(velocity.x, jumpSpeed);
             hasJumped = true;
         }
-
+        if (moveHorizontal != 0)
+        {
+            Debug.Log("Walk");
+            GetComponent<SpriteAnim>().PlayAnimation(1);
+        }
+        else
+        {
+            GetComponent<SpriteAnim>().PlayAnimation(0);
+        }
         velocity = new Vector2(moveHorizontal * speed, Mathf.Min(rb2d.velocity.y + velocity.y, jumpSpeed));
         rb2d.velocity = velocity;
         velocity.y = 0;

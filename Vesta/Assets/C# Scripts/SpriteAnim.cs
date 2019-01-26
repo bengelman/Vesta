@@ -11,7 +11,7 @@ public class SpriteAnim : MonoBehaviour
 	private float SecsPerFrame = 0.25f;
 	public int loops = 0;
 	public int prevID = 0;
-
+    private int playing = 0;
 
 
 	void Awake ()
@@ -28,7 +28,7 @@ public class SpriteAnim : MonoBehaviour
 		this.loops = loops;
 		SecsPerFrame = AnimationSets[ID].speed;
 		Cur_SpriteID = 0;
-
+        playing = ID;
 		StartCoroutine ("AnimateSprite", ID);
 
 	}
@@ -37,9 +37,13 @@ public class SpriteAnim : MonoBehaviour
 	}
 	public void PlayAnimation (int ID)
 	{
-		
+		if (playing == ID)
+        {
+            return;
+        }
 		SecsPerFrame = AnimationSets[ID].speed;
 		StopCoroutine ("AnimateSprite");
+        playing = ID;
 		prevID = ID;
 		//Add as much ID as necessary. Each is a different animation.
 		switch (ID) {
