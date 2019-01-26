@@ -22,13 +22,19 @@ public class Player : MonoBehaviour
         canJump = true;
         hasJumped = false;
         HP = 100;
+        isPlayer1 = true;
     }
 
     // Update is called once per frame
     void Update()
     {
         
-        float moveHorizontal = Input.GetAxis("Horizontal");
+        float moveHorizontal = 0;
+        if(Input.GetKey(isPlayer1 ? KeyCode.A : KeyCode.LeftArrow)) {
+            moveHorizontal = -1;
+        } else if (Input.GetKey(isPlayer1 ? KeyCode.D : KeyCode.RightArrow)) {
+            moveHorizontal = 1;
+        }
 
         if (hasJumped) {
             canJump = false;
@@ -36,7 +42,7 @@ public class Player : MonoBehaviour
             canJump = true;
         }
 
-        if (Input.GetKeyDown(KeyCode.W) && canJump) {
+        if (Input.GetKeyDown(isPlayer1 ? KeyCode.W : KeyCode.UpArrow) && canJump) {
             rb2d.velocity = new Vector2(0, 0);
             velocity = new Vector2(velocity.x, jumpSpeed);
             hasJumped = true;
@@ -50,6 +56,7 @@ public class Player : MonoBehaviour
         {
             GetComponent<SpriteAnim>().PlayAnimation(0);
         }
+
         /**** For damage testing
         if (Input.GetKeyDown(KeyCode.J)) {
             TakeDamge(10, "left");
