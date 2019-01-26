@@ -8,14 +8,17 @@ public class ResourceManager : MonoBehaviour
     public int player2Resources;
     public int player1Control;
     public int player2Control;
-    public bool[][] tiles;
+    public  int mapX;
+    public  int mapY;
+    public bool[,] tiles;
     public Vector2[] occupiedTiles;
     // Start is called before the first frame update
     void Start()
     {
-        foreach(Vector2 vec in occupiedTiles)
+        tiles = new bool[mapX,mapY];
+        foreach (Vector2 vec in occupiedTiles)
         {
-            tiles[(int)vec.x][(int)vec.y] = true;
+            tiles[(int)vec.x,(int)vec.y] = true;
         }
     }
 
@@ -28,7 +31,7 @@ public class ResourceManager : MonoBehaviour
     {
         foreach (Vector2 vec in occupiedTiles)
         {
-            if (tiles[(int)vec.x][(int)vec.y])
+            if (tiles[(int)vec.x,(int)vec.y])
                 return false;
         }
         return false;
@@ -37,7 +40,7 @@ public class ResourceManager : MonoBehaviour
     {
         foreach (Vector2 vec in checkTiles)
         {
-            tiles[(int)vec.x][(int)vec.y] = value;
+            tiles[(int)vec.x,(int)vec.y] = value;
         }
     }
 }
