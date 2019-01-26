@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     public float speed = 10;
     private bool canJump;
     private bool hasJumped;
+    public int resources;
     public float HP;
 
     // Start is called before the first frame update
@@ -38,7 +39,7 @@ public class Player : MonoBehaviour
             velocity = new Vector2(velocity.x, jumpSpeed);
             hasJumped = true;
         }
-        if (moveHorizontal != 0)
+        if (moveHorizontal != 0 && !hasJumped)
         {
             Debug.Log("Walk");
             GetComponent<SpriteAnim>().PlayAnimation(1);
@@ -46,6 +47,14 @@ public class Player : MonoBehaviour
         else
         {
             GetComponent<SpriteAnim>().PlayAnimation(0);
+        }
+        if(moveHorizontal < 0)
+        {
+            GetComponent<SpriteRenderer>().flipX = true;
+        }
+        else if (moveHorizontal > 0)
+        {
+            GetComponent<SpriteRenderer>().flipX = false;
         }
         velocity = new Vector2(moveHorizontal * speed, Mathf.Min(rb2d.velocity.y + velocity.y, jumpSpeed));
         rb2d.velocity = velocity;
