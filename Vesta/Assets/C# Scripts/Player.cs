@@ -22,7 +22,7 @@ public class Player : MonoBehaviour
         canJump = true;
         hasJumped = false;
         HP = 100;
-        isPlayer1 = true;
+        //isPlayer1 = true;
     }
 
     // Update is called once per frame

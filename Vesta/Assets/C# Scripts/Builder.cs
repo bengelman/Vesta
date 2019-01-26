@@ -20,7 +20,7 @@ public class Builder : MonoBehaviour
         if(Input.GetKeyDown(player.isPlayer1 ? KeyCode.LeftShift : KeyCode.RightShift))
         {
             int placeY = (int)player.transform.position.y;
-            int placeX = GetComponent<SpriteRenderer>().flipX ? (int)player.transform.position.x - 1 : (int)player.transform.position.x + 1;
+            int placeX = GetComponent<SpriteRenderer>().flipX ? (int)(player.transform.position.x - 0.9) : Mathf.CeilToInt(player.transform.position.x + 1);
             if (!resourceManager.AreTilesOccupied(new Vector2[]{new Vector2(placeX, placeY)}))
             {
                 resourceManager.SetTiles(new Vector2[] { new Vector2(placeX, placeY) }, true);
