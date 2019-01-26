@@ -67,7 +67,7 @@ public class Player : MonoBehaviour
             GetComponent<SpriteAnim>().PlayTemp(2, 1);
             DealDamage(50);
         } else if (Input.GetKeyDown(isPlayer1 ? KeyCode.E : KeyCode.Slash)) {
-            GetComponent<SpriteAnim>().PlayTemp(3, 1);
+            GetComponent<SpriteAnim>().PlayTemp(4, 6);
             isFrozen = true;
             Invoke("SpecialDamage", 1f/2f);
         }
@@ -130,6 +130,7 @@ public class Player : MonoBehaviour
 
     private void SpecialDamage()
     {
+        GetComponent<SpriteAnim>().PlayTemp(3, 1);
         DealDamage(200);
         isFrozen = false;
     }
