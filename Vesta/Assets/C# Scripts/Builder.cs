@@ -95,7 +95,7 @@ public class Builder : MonoBehaviour
             player.GetComponent<Player>().DoubleJump();
             player.GetComponent<Player>().KnockBack(new Vector2(0, 7));
             player.GetComponent<SpriteAnim>().PlayTemp(5, 1);
-            Instantiate(node, new Vector2(playerX, (int)playerY - 1f), new Quaternion());
+            Instantiate(node, new Vector2(playerX, (int)playerY - 1.5f), new Quaternion());
             return true;
         }
     }
