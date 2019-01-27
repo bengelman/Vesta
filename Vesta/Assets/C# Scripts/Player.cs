@@ -173,6 +173,7 @@ public class Player : MonoBehaviour
 
     public void KnockBack(Vector2 strength)
     {
+        rb2d.velocity = new Vector2(0, 0);
         rb2d.AddForce(new Vector2(strength.x, 0));
         rb2d.velocity = new Vector2(rb2d.velocity.x, strength.y);
         knockedBack = true;
