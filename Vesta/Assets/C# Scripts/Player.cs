@@ -195,7 +195,7 @@ public class Player : MonoBehaviour
     }
     public bool CanDoubleJump()
     {
-        return !hasJumped;
+        return canJump;
     }
     public void DoubleJump()
     {
