@@ -54,7 +54,6 @@ public class Player : MonoBehaviour
         }
 
         if (moveHorizontal != 0 && !hasJumped) { // animations
-            Debug.Log("Walk");
             GetComponent<SpriteAnim>().PlayAnimation(1);
         } else {
             GetComponent<SpriteAnim>().PlayAnimation(0);
@@ -148,7 +147,7 @@ public class Player : MonoBehaviour
     {
         bool direction = GetComponent<SpriteRenderer>().flipX; // true == left, false == right
 
-        RaycastHit2D attack = Physics2D.Raycast((Vector2)transform.position + (direction ? Vector2.left * 1f / 2f : Vector2.right), direction ? Vector2.left : Vector2.right, 1f / 2f);
+        RaycastHit2D attack = Physics2D.Raycast((Vector2)transform.position + new Vector2(0, -0.25f) + (direction ? Vector2.left * 1f / 2f : Vector2.right), direction ? Vector2.left : Vector2.right, 1f / 2f);
 
         if (attack.collider != null) {
             if (attack.collider.GetComponent<Player>() != null)
@@ -181,5 +180,12 @@ public class Player : MonoBehaviour
     {
         isFrozen = false;
     }
-
+    public bool CanDoubleJump()
+    {
+        return !hasJumped;
+    }
+    public void DoubleJump()
+    {
+        hasJumped = true;
+    }
 }
