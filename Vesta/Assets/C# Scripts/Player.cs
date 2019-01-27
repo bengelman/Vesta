@@ -122,7 +122,7 @@ public class Player : MonoBehaviour
         hasJumped = false;
     }
 
-    public void TakeDamge(float damage, string dmgDir)
+    public void TakeDamge(float damage, string dmgDir, bool doesKnockback = true)
     {
         HP -= damage;
         isFrozen = true;
@@ -145,7 +145,9 @@ public class Player : MonoBehaviour
             //HP = maxHP;
         }
 
-        KnockBack(force);
+        if (doesKnockback) {
+            KnockBack(force);
+        }
     }
     float slowmotime = 0;
     private void SpecialDamage()
@@ -173,7 +175,7 @@ public class Player : MonoBehaviour
 
     public void KnockBack(Vector2 strength)
     {
-        rb2d.velocity = new Vector2(0, 0);
+        rb2d.velocity = new Vector2(0, 0.115f);
         rb2d.AddForce(new Vector2(strength.x, 0));
         rb2d.velocity = new Vector2(rb2d.velocity.x, strength.y);
         knockedBack = true;
