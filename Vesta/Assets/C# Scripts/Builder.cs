@@ -10,7 +10,9 @@ public class Builder : MonoBehaviour
     public GameObject block, anvil, bridge;
     private Structure[] structures;
     public SpriteRenderer render;
+    public TextMesh text;
     public int selected;
+    public float resources = 0f;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,6 +26,8 @@ public class Builder : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        resources += Time.deltaTime;
+        text.text = "" + (int)(resources / structures[selected].cost);
         if (Input.GetKeyDown(player.isPlayer1 ? KeyCode.LeftAlt : KeyCode.RightAlt))
         {
             selected++;
@@ -31,20 +35,23 @@ public class Builder : MonoBehaviour
         }
         selected %= structures.Length;
         render.sprite = structures[selected].node.GetComponent<SpriteRenderer>().sprite;
-        if (Input.GetKeyDown(player.isPlayer1 ? KeyCode.LeftShift : KeyCode.RightShift))
+
+        if (Input.GetKeyDown(player.isPlayer1 ? KeyCode.LeftShift : KeyCode.RightShift) && resources >= structures[selected].cost)
         {
             if (!resourceManager.AreTilesOccupied(structures[selected].BuildPattern(GetComponent<SpriteRenderer>().flipX, Mathf.RoundToInt(player.transform.position.x), (int)Mathf.RoundToInt(player.transform.position.y))))
             {
+                resources -= structures[selected].cost;
                 resourceManager.SetTiles(structures[selected].BuildPattern(GetComponent<SpriteRenderer>().flipX, (int)Mathf.RoundToInt(player.transform.position.x), (int)Mathf.RoundToInt(player.transform.position.y)), true);
-                structures[selected].Build(playerObj, GetComponent<SpriteRenderer>().flipX, (int)Mathf.RoundToInt(player.transform.position.x), (int)Mathf.RoundToInt
-                    (player.transform.position.y));
+                structures[selected].Build(playerObj, GetComponent<SpriteRenderer>().flipX, (int)Mathf.RoundToInt(player.transform.position.x), (int)Mathf.RoundToInt(player.transform.position.y));
             }
         }
     }
     private abstract class Structure
     {
-        public Structure(GameObject node)
+        public int cost;
+        public Structure(GameObject node, int cost)
         {
+            this.cost = cost;
             this.node = node;
         }
         public GameObject node;
@@ -53,14 +60,14 @@ public class Builder : MonoBehaviour
     }
     private class Block : Structure
     {
-        public Block(GameObject node) : base(node)
+        public Block(GameObject node) : base(node, 2)
         {
 
         }
 
         public override Vector2[] BuildPattern(bool facing, int playerX, int playerY)
         {
-            int placeX = facing ? (int)Mathf.CeilToInt(playerX - 0.5f) : Mathf.CeilToInt(playerX + 1);
+            int placeX = facing ? playerX - 1 : playerX + 1;
             return new Vector2[] {new Vector2(placeX, playerY)};
         }
         public override void Build(GameObject player, bool facing, int playerX, int playerY)
@@ -71,7 +78,7 @@ public class Builder : MonoBehaviour
     }
     private class Anvil : Structure
     {
-        public Anvil(GameObject node) : base(node)
+        public Anvil(GameObject node) : base(node, 10)
         {
 
         }
@@ -90,13 +97,13 @@ public class Builder : MonoBehaviour
     }
     private class Bridge : Structure
     {
-        public Bridge(GameObject node) : base(node)
+        public Bridge(GameObject node) : base(node, 5)
         {
 
         }
         public override Vector2[] BuildPattern(bool facing, int playerX, int playerY)
         {
-            return new Vector2[] { new Vector2(playerX, (int)(playerY - 1.5f)), new Vector2(playerX - 1, (int)(playerY - 1.5f)) , new Vector2(playerX + 1, (int)(playerY - 1.5f)) };
+            return new Vector2[] { new Vector2(playerX, (int)(playerY - 1.5f))};
         }
         public override void Build(GameObject player, bool facing, int playerX, int playerY)
         {
