@@ -1557,7 +1557,7 @@ MonoBehaviour:
   rb2d: {fileID: 544416702}
   jumpSpeed: 15
   speed: 5
-  maxHP: 0
+  maxHP: 1000
   HP: 0
   resources: 0
   isPlayer1: 1
@@ -4559,6 +4559,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1841674898}
   - component: {fileID: 1841674897}
+  - component: {fileID: 1841674902}
   - component: {fileID: 1841674900}
   - component: {fileID: 1841674899}
   - component: {fileID: 1841674901}
@@ -4691,6 +4692,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   durability: 3
+--- !u!114 &1841674902
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1841674896}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b37ade62eeb0fb41b4180edfe47f2c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1843630630
 GameObject:
   m_ObjectHideFlags: 0
