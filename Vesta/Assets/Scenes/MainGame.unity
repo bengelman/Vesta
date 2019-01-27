@@ -671,7 +671,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.1002121, y: -0.16284609}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -682,7 +682,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.7995758, y: 0.6743078}
   m_EdgeRadius: 0
 --- !u!1 &256717869
 GameObject:
@@ -1352,6 +1352,11 @@ MonoBehaviour:
     - {fileID: 21300000, guid: 7725868ac76034f49a48ee2d331dde3b, type: 3}
     - {fileID: 21300000, guid: 7725868ac76034f49a48ee2d331dde3b, type: 3}
     speed: 0.1
+  - AnimationName: anvil
+    Anim_Sprites:
+    - {fileID: 21300000, guid: db693e584b87ab54985cf8f48cf74fc3, type: 3}
+    - {fileID: 21300000, guid: 38d92373cc7f33848bee7460053c4859, type: 3}
+    speed: 0.1
   loops: 0
   prevID: 0
 --- !u!212 &544416700
@@ -1504,7 +1509,6 @@ MonoBehaviour:
   render: {fileID: 1156308252}
   text: {fileID: 1914731212}
   selected: 0
-  resources: 50
 --- !u!1 &685668597
 GameObject:
   m_ObjectHideFlags: 0
@@ -4337,7 +4341,6 @@ MonoBehaviour:
   render: {fileID: 276656120}
   text: {fileID: 1036758454}
   selected: 0
-  resources: 50
 --- !u!50 &2089783301
 Rigidbody2D:
   serializedVersion: 4
@@ -4442,11 +4445,19 @@ MonoBehaviour:
     - {fileID: 21300000, guid: eb4e044eed9c2c943af8de5e3b19d416, type: 3}
     - {fileID: 21300000, guid: 07629afc95c03bc489d210ce35d83a05, type: 3}
     - {fileID: 21300000, guid: 9efb9e1ca47b3cc41808f9e6df7347ed, type: 3}
+    - {fileID: 21300000, guid: 9efb9e1ca47b3cc41808f9e6df7347ed, type: 3}
+    - {fileID: 21300000, guid: 9efb9e1ca47b3cc41808f9e6df7347ed, type: 3}
+    - {fileID: 21300000, guid: 9efb9e1ca47b3cc41808f9e6df7347ed, type: 3}
     speed: 0.02
   - AnimationName: Moving
     Anim_Sprites:
     - {fileID: 21300000, guid: eb4e044eed9c2c943af8de5e3b19d416, type: 3}
     - {fileID: 21300000, guid: eb4e044eed9c2c943af8de5e3b19d416, type: 3}
+    speed: 0.1
+  - AnimationName: Moving
+    Anim_Sprites:
+    - {fileID: 21300000, guid: ac4008d7c075ee041920524f23ffe3c0, type: 3}
+    - {fileID: 21300000, guid: 9863d94ffdacb3d41aff8f565db10fd9, type: 3}
     speed: 0.1
   loops: 0
   prevID: 0

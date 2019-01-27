@@ -45,14 +45,14 @@ public class Player : MonoBehaviour
             canJump = true;
         }
         
-        if (Input.GetKey(isPlayer1 ? KeyCode.A : KeyCode.LeftArrow)) // movement
+        if (Input.GetKey(isPlayer1 ? KeyCode.A : KeyCode.Keypad4)) // movement
         {
             moveHorizontal = -1;
         }
-        else if (Input.GetKey(isPlayer1 ? KeyCode.D : KeyCode.RightArrow)) {
+        else if (Input.GetKey(isPlayer1 ? KeyCode.D : KeyCode.Keypad6)) {
             moveHorizontal = 1;
         }
-        if (Input.GetKeyDown(isPlayer1 ? KeyCode.W : KeyCode.UpArrow) && canJump) { // jump
+        if (Input.GetKeyDown(isPlayer1 ? KeyCode.W : KeyCode.Keypad8) && canJump) { // jump
             rb2d.velocity = new Vector2(0, 0);
             velocity = new Vector2(velocity.x, jumpSpeed);
             hasJumped = true;
@@ -72,11 +72,11 @@ public class Player : MonoBehaviour
             GetComponent<SpriteRenderer>().flipX = false;
         }
 
-        if (Input.GetKeyDown(isPlayer1 ? KeyCode.Q : KeyCode.Period)) // attacks
+        if (Input.GetKeyDown(isPlayer1 ? KeyCode.Q : KeyCode.Keypad7)) // attacks
         {
             GetComponent<SpriteAnim>().PlayTemp(2, 1);
             DealDamage(50);
-        } else if (Input.GetKeyDown(isPlayer1 ? KeyCode.E : KeyCode.Slash)) {
+        } else if (Input.GetKeyDown(isPlayer1 ? KeyCode.E : KeyCode.Keypad9)) {
             GetComponent<SpriteAnim>().PlayTemp(4, 6);
             isFrozen = true;
             Invoke("SpecialDamage", 1f/2f);
@@ -201,4 +201,5 @@ public class Player : MonoBehaviour
     {
         hasJumped = true;
     }
+
 }
