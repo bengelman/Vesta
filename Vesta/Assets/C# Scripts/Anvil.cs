@@ -22,6 +22,9 @@ public class Anvil : MonoBehaviour
         if (hazard.collider.GetComponent<Player>() != null) {
             hazard.collider.GetComponent<Player>().TakeDamge(100, !hazard.collider.GetComponent<Player>().GetComponent<SpriteRenderer>().flipX ? "left" : "right");
             Destroy(this.gameObject);
+        } else if (hazard.collider.GetComponent<Breakable>() != null) {
+            hazard.collider.GetComponent<Breakable>().Break();
+            Destroy(this.gameObject);
         }
     }
 }
