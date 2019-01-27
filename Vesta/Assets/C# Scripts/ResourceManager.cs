@@ -29,15 +29,16 @@ public class ResourceManager : MonoBehaviour
     }
     public bool AreTilesOccupied(Vector2[] checkTiles)
     {
-        foreach (Vector2 vec in occupiedTiles)
+        foreach (Vector2 vec in checkTiles)
         {
             if (vec.y < 1) return true;
             if (vec.y >= mapY) return true;
             if (vec.x < 1) return true;
             if (vec.x >= mapX) return true;
-            if (tiles[(int)vec.x,(int)vec.y])
+            if (tiles[(int)vec.x, (int)vec.y])
                 return true;
         }
+
         return false;
     }
     public void SetTiles(Vector2[] checkTiles, bool value)
