@@ -7,7 +7,7 @@ public class Builder : MonoBehaviour
     public GameObject playerObj;
     private Player player;
     public ResourceManager resourceManager;
-    public GameObject block, anvil;
+    public GameObject block, anvil, bridge;
     private Structure[] structures;
     public SpriteRenderer render;
     public int selected;
@@ -16,7 +16,7 @@ public class Builder : MonoBehaviour
     {
         structures = new Structure[]
             {
-                new Block(block), new Anvil(anvil)
+                new Block(block), new Anvil(anvil), new Bridge(bridge)
             };
         player = playerObj.GetComponent<Player>();
     }
@@ -86,6 +86,22 @@ public class Builder : MonoBehaviour
             player.GetComponent<Player>().KnockBack(new Vector2(0, 7));
             Instantiate(node, new Vector2(playerX, (int)playerY - 1.5f), new Quaternion());
             
+        }
+    }
+    private class Bridge : Structure
+    {
+        public Bridge(GameObject node) : base(node)
+        {
+
+        }
+        public override Vector2[] BuildPattern(bool facing, int playerX, int playerY)
+        {
+            return new Vector2[] { new Vector2(playerX, (int)(playerY - 1.5f)), new Vector2(playerX - 1, (int)(playerY - 1.5f)) , new Vector2(playerX + 1, (int)(playerY - 1.5f)) };
+        }
+        public override void Build(GameObject player, bool facing, int playerX, int playerY)
+        {
+            Instantiate(node, new Vector2(playerX, (int)(playerY - 1.5f)), new Quaternion());
+
         }
     }
 }
