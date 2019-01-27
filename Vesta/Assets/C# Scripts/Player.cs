@@ -8,7 +8,7 @@ public class Player : MonoBehaviour
     private Vector2 velocity = new Vector2(0, 0);
     public float jumpSpeed = 5;
     public float speed = 10;
-    public const float maxHP = 1000;
+    public float maxHP = 1000;
     public float HP;
     public int resources;
     private bool canJump;
@@ -31,6 +31,11 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        slowmotime -= Time.deltaTime;
+        if (slowmotime <= 0)
+        {
+            Time.timeScale = 1.0f;
+        }
         if (isFrozen) return;
 
         float moveHorizontal = 0;
@@ -54,7 +59,6 @@ public class Player : MonoBehaviour
         }
 
         if (moveHorizontal != 0 && !hasJumped) { // animations
-            Debug.Log("Walk");
             GetComponent<SpriteAnim>().PlayAnimation(1);
         } else {
             GetComponent<SpriteAnim>().PlayAnimation(0);
@@ -93,8 +97,12 @@ public class Player : MonoBehaviour
         rb2d.velocity = velocity;
         velocity.y = 0; // don't change
 
-        if (transform.position.y <= 0 || transform.position.x < -1 || transform.position.x > 30) { // offstage damage
-            TakeDamge(maxHP, GetComponent<SpriteRenderer>().flipX ? "left" : "right");
+        if (transform.position.y <= 0.05 || transform.position.x < -1 || transform.position.x > 44 || transform.position.y > 25) { // offstage damage
+            gameObject.SetActive(false);
+            Invoke("Respawn", 3);
+            HP = maxHP;
+            
+            //TakeDamge(maxHP, GetComponent<SpriteRenderer>().flipX ? "left" : "right");
         }
     }
 
@@ -127,16 +135,19 @@ public class Player : MonoBehaviour
             force += new Vector2((damage * (maxHP - HP) / 100), 0);
         }
 
-        if (HP <= 0)
+        if (HP <= 0 && damage >= 100)
         {
-            gameObject.SetActive(false);
-            Invoke("Respawn", 3);
-            HP = maxHP;
+            Time.timeScale = 0.1f;
+            slowmotime = 1.5f;
+            //isFrozen = true;
+            //gameObject.SetActive(false);
+            //Invoke("Respawn", 3);
+            //HP = maxHP;
         }
 
         KnockBack(force);
     }
-
+    float slowmotime = 0;
     private void SpecialDamage()
     {
         GetComponent<SpriteAnim>().PlayTemp(3, 1);
@@ -148,7 +159,7 @@ public class Player : MonoBehaviour
     {
         bool direction = GetComponent<SpriteRenderer>().flipX; // true == left, false == right
 
-        RaycastHit2D attack = Physics2D.Raycast((Vector2)transform.position + (direction ? Vector2.left * 1f / 2f : Vector2.right), direction ? Vector2.left : Vector2.right, 1f / 2f);
+        RaycastHit2D attack = Physics2D.Raycast((Vector2)transform.position + new Vector2(0, -0.25f) + (direction ? Vector2.left * 1f / 2f : Vector2.right), direction ? Vector2.left : Vector2.right, 1f / 2f);
 
         if (attack.collider != null) {
             if (attack.collider.GetComponent<Player>() != null)
@@ -173,7 +184,8 @@ public class Player : MonoBehaviour
         canJump = true;
         hasJumped = false;
         velocity = new Vector2(0, 0);
-        transform.position = isPlayer1 ? new Vector2(2, 10) : new Vector2(25, 10);
+        HP = maxHP;
+        transform.position = isPlayer1 ? new Vector2(2, 10) : new Vector2(42, 10);
         isFrozen = false;
     }
 
@@ -181,5 +193,12 @@ public class Player : MonoBehaviour
     {
         isFrozen = false;
     }
-
+    public bool CanDoubleJump()
+    {
+        return !hasJumped;
+    }
+    public void DoubleJump()
+    {
+        hasJumped = true;
+    }
 }

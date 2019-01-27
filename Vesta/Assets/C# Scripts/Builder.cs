@@ -7,7 +7,7 @@ public class Builder : MonoBehaviour
     public GameObject playerObj;
     private Player player;
     public ResourceManager resourceManager;
-    public GameObject block, anvil;
+    public GameObject block, anvil, bridge;
     private Structure[] structures;
     public SpriteRenderer render;
     public int selected;
@@ -16,7 +16,7 @@ public class Builder : MonoBehaviour
     {
         structures = new Structure[]
             {
-                new Block(block), new Anvil(anvil)
+                new Block(block), new Anvil(anvil), new Bridge(bridge)
             };
         player = playerObj.GetComponent<Player>();
     }
@@ -33,10 +33,11 @@ public class Builder : MonoBehaviour
         render.sprite = structures[selected].node.GetComponent<SpriteRenderer>().sprite;
         if (Input.GetKeyDown(player.isPlayer1 ? KeyCode.LeftShift : KeyCode.RightShift))
         {
-            if (!resourceManager.AreTilesOccupied(structures[selected].BuildPattern(GetComponent<SpriteRenderer>().flipX, (int)player.transform.position.x, (int)player.transform.position.y)))
+            if (!resourceManager.AreTilesOccupied(structures[selected].BuildPattern(GetComponent<SpriteRenderer>().flipX, Mathf.RoundToInt(player.transform.position.x), (int)Mathf.RoundToInt(player.transform.position.y))))
             {
-                resourceManager.SetTiles(structures[selected].BuildPattern(GetComponent<SpriteRenderer>().flipX, (int)player.transform.position.x, (int)player.transform.position.y), true);
-                structures[selected].Build(playerObj, GetComponent<SpriteRenderer>().flipX, (int)player.transform.position.x, (int)player.transform.position.y);
+                resourceManager.SetTiles(structures[selected].BuildPattern(GetComponent<SpriteRenderer>().flipX, (int)Mathf.RoundToInt(player.transform.position.x), (int)Mathf.RoundToInt(player.transform.position.y)), true);
+                structures[selected].Build(playerObj, GetComponent<SpriteRenderer>().flipX, (int)Mathf.RoundToInt(player.transform.position.x), (int)Mathf.RoundToInt
+                    (player.transform.position.y));
             }
         }
     }
@@ -59,12 +60,12 @@ public class Builder : MonoBehaviour
 
         public override Vector2[] BuildPattern(bool facing, int playerX, int playerY)
         {
-            int placeX = facing ? (int)(playerX - 0.9) : Mathf.CeilToInt(playerX + 1);
+            int placeX = facing ? (int)Mathf.CeilToInt(playerX - 0.5f) : Mathf.CeilToInt(playerX + 1);
             return new Vector2[] {new Vector2(placeX, playerY)};
         }
         public override void Build(GameObject player, bool facing, int playerX, int playerY)
         {
-            int placeX = facing ? (int)(playerX - 0.9) : Mathf.CeilToInt(playerX + 1);
+            int placeX = facing ? playerX - 1 : playerX + 1;
             Instantiate(node, new Vector2(placeX, playerY), new Quaternion());
         }
     }
@@ -76,13 +77,31 @@ public class Builder : MonoBehaviour
         }
         public override Vector2[] BuildPattern(bool facing, int playerX, int playerY)
         {
-            return new Vector2[] { new Vector2(Mathf.RoundToInt(playerX), playerY - 1) };
+            return new Vector2[] { new Vector2(playerX, (int)playerY - 1.5f) };
         }
         public override void Build(GameObject player, bool facing, int playerX, int playerY)
         {
+            if (!player.GetComponent<Player>().CanDoubleJump()) return;
+            player.GetComponent<Player>().DoubleJump();
             player.GetComponent<Player>().KnockBack(new Vector2(0, 7));
-            Instantiate(node, new Vector2(Mathf.RoundToInt(playerX), playerY - 1), new Quaternion());
+            Instantiate(node, new Vector2(playerX, (int)playerY - 1.5f), new Quaternion());
             
+        }
+    }
+    private class Bridge : Structure
+    {
+        public Bridge(GameObject node) : base(node)
+        {
+
+        }
+        public override Vector2[] BuildPattern(bool facing, int playerX, int playerY)
+        {
+            return new Vector2[] { new Vector2(playerX, (int)(playerY - 1.5f)), new Vector2(playerX - 1, (int)(playerY - 1.5f)) , new Vector2(playerX + 1, (int)(playerY - 1.5f)) };
+        }
+        public override void Build(GameObject player, bool facing, int playerX, int playerY)
+        {
+            Instantiate(node, new Vector2(playerX, (int)(playerY - 1.5f)), new Quaternion());
+
         }
     }
 }
