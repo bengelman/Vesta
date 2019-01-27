@@ -16,6 +16,8 @@ public class Player : MonoBehaviour
     public bool isPlayer1;
     public bool isFrozen;
     public bool knockedBack;
+    public bool canFall;
+    public bool canDash;
 
     // Start is called before the first frame update
     void Start()
@@ -26,6 +28,7 @@ public class Player : MonoBehaviour
         HP = maxHP;
         isFrozen = false;
         knockedBack = false;
+        canFall = true;
     }
 
     // Update is called once per frame
@@ -36,6 +39,11 @@ public class Player : MonoBehaviour
         {
             Time.timeScale = 1.0f;
         }
+        if (!canFall)
+        {
+            rb2d.velocity = new Vector2(rb2d.velocity.x, 0);
+        }
+
         if (isFrozen) return;
 
         float moveHorizontal = 0;
@@ -77,9 +85,18 @@ public class Player : MonoBehaviour
             GetComponent<SpriteAnim>().PlayTemp(2, 1);
             DealDamage(50);
         } else if (Input.GetKeyDown(isPlayer1 ? KeyCode.E : KeyCode.Keypad9)) {
-            GetComponent<SpriteAnim>().PlayTemp(4, 6);
-            isFrozen = true;
-            Invoke("SpecialDamage", 1f/2f);
+            if ((Input.GetKey(isPlayer1 ? KeyCode.A : KeyCode.Keypad4) || Input.GetKey(isPlayer1 ? KeyCode.D : KeyCode.Keypad6)) && canDash) {
+                GetComponent<SpriteAnim>().PlayTemp(4, 6);
+                rb2d.AddForce(new Vector2(200 * (GetComponent<SpriteRenderer>().flipX ? -1 : 1), 0));
+                canFall = false;
+                isFrozen = true;
+                canDash = false;
+                Invoke("SideSpecialDamage", 0.5f);
+            } else {
+                GetComponent<SpriteAnim>().PlayTemp(4, 6);
+                isFrozen = true;
+                Invoke("SpecialDamage", 0.5f);
+            }
         }
 
         /**** For damage testing
@@ -110,19 +127,22 @@ public class Player : MonoBehaviour
     {
         hasJumped = false;
         knockedBack = false;
+        canDash = true;
     }
 
     private void OnCollisionStay(Collision collision)
     {
         knockedBack = false;
+        canDash = true;
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
         hasJumped = false;
+        canDash = true;
     }
 
-    public void TakeDamge(float damage, string dmgDir)
+    public void TakeDamge(float damage, string dmgDir, bool doesKnockback = true)
     {
         HP -= damage;
         isFrozen = true;
@@ -145,7 +165,9 @@ public class Player : MonoBehaviour
             //HP = maxHP;
         }
 
-        KnockBack(force);
+        if (doesKnockback) {
+            KnockBack(force);
+        }
     }
     float slowmotime = 0;
     private void SpecialDamage()
@@ -153,6 +175,14 @@ public class Player : MonoBehaviour
         GetComponent<SpriteAnim>().PlayTemp(3, 1);
         DealDamage(200);
         isFrozen = false;
+    }
+
+    private void SideSpecialDamage()
+    {
+        GetComponent<SpriteAnim>().PlayTemp(3, 1);
+        DealDamage(100);
+        isFrozen = false;
+        canFall = true;
     }
 
     public void DealDamage(float damage)
@@ -173,7 +203,7 @@ public class Player : MonoBehaviour
 
     public void KnockBack(Vector2 strength)
     {
-        rb2d.velocity = new Vector2(0, 0);
+        rb2d.velocity = new Vector2(0, 0.115f);
         rb2d.AddForce(new Vector2(strength.x, 0));
         rb2d.velocity = new Vector2(rb2d.velocity.x, strength.y);
         knockedBack = true;

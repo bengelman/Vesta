@@ -19,12 +19,11 @@ public class Anvil : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         Destroy(this.gameObject);
-        RaycastHit2D hazard = Physics2D.Raycast((Vector2)transform.position + (Vector2.down * 0.5f), Vector2.down, 0.5f);
-        if (hazard.collider.GetComponent<Player>() != null) {
-            hazard.collider.GetComponent<Player>().TakeDamge(100, !hazard.collider.GetComponent<SpriteRenderer>().flipX ? "left" : "right");
+        if (collision.collider.GetComponent<Player>() != null) {
+            collision.collider.GetComponent<Player>().TakeDamge(100, !collision.collider.GetComponent<SpriteRenderer>().flipX ? "left" : "right");
             
-        } else if (hazard.collider.GetComponent<Breakable>() != null) {
-            hazard.collider.GetComponent<Breakable>().Break();
+        } else if (collision.collider.GetComponent<Breakable>() != null) {
+            collision.collider.GetComponent<Breakable>().Break();
         }
     }
 }
